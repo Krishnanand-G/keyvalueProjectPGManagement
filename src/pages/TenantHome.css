@@ -4,48 +4,228 @@
     margin: 0 auto;
 }
 
-.tenant-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-    gap: var(--spacing-lg);
-    margin-top: var(--spacing-xl);
+.loading {
+    text-align: center;
+    padding: var(--spacing-xl);
+    color: var(--text-gray);
 }
 
-.info-card {
+.payment-alert {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-md);
+    background: #FEF2F2;
+    border: 1px solid #FCA5A5;
+    border-left: 4px solid #EF4444;
+    padding: var(--spacing-md);
+    border-radius: var(--radius-md);
+    color: #991B1B;
+    margin-bottom: var(--spacing-lg);
+    font-weight: 500;
+}
+
+.alerts-section {
+    margin-bottom: var(--spacing-xl);
+}
+
+.alerts-section h2 {
+    margin-bottom: var(--spacing-md);
+    color: var(--text-dark);
+}
+
+.alerts-grid {
+    display: grid;
+    gap: var(--spacing-md);
+}
+
+.alert-card {
+    background: white;
+    padding: var(--spacing-md);
+    border-radius: var(--radius-lg);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    display: flex;
+    gap: var(--spacing-md);
+    align-items: start;
+    border-left: 4px solid;
+}
+
+.alert-card.status-open {
+    border-left-color: #EF4444;
+    background: #FEF2F2;
+}
+
+.alert-card.status-in_progress {
+    border-left-color: #F59E0B;
+    background: #FFFBEB;
+}
+
+.alert-card.status-resolved {
+    border-left-color: #10B981;
+    background: #F0FDF4;
+}
+
+.alert-card strong {
+    display: block;
+    margin-bottom: 0.25rem;
+    color: var(--text-dark);
+}
+
+.alert-card p {
+    font-size: 0.875rem;
+    color: var(--text-gray);
+    margin: 0;
+}
+
+.landlord-note {
+    margin-top: 0.25rem;
+    font-style: italic;
+    color: #666;
+}
+
+.tenant-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+    gap: var(--spacing-lg);
+}
+
+.card {
     background: white;
     padding: var(--spacing-xl);
     border-radius: var(--radius-lg);
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-    text-align: center;
-    transition: all 0.2s;
 }
 
-.info-card:hover {
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-    transform: translateY(-2px);
-}
-
-.card-icon {
-    color: var(--primary-red);
-    margin-bottom: var(--spacing-md);
-}
-
-.info-card h2 {
+.card h2 {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-sm);
+    margin-bottom: var(--spacing-lg);
+    color: var(--text-dark);
     font-size: 1.25rem;
-    margin-bottom: var(--spacing-sm);
+}
+
+.profile-info {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-md);
+}
+
+.info-row {
+    display: flex;
+    justify-content: space-between;
+    padding: var(--spacing-sm);
+    background: var(--background-gray);
+    border-radius: var(--radius-md);
+}
+
+.info-row .label {
+    font-weight: 600;
+    color: var(--text-gray);
+}
+
+.info-row .value {
     color: var(--text-dark);
 }
 
-.info-card p {
-    color: var(--text-gray);
-    margin-bottom: var(--spacing-md);
+.roommates-list {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-md);
 }
 
-.info-banner {
-    margin-top: var(--spacing-xl);
-    padding: var(--spacing-md);
+.roommate-item {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-md);
+    padding: var(--spacing-sm);
     background: var(--background-gray);
     border-radius: var(--radius-md);
+}
+
+.roommate-item.clickable {
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.roommate-item.clickable:hover {
+    background: #E5E7EB;
+    transform: translateX(4px);
+}
+
+.roommate-avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: var(--primary-red);
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 600;
+    font-size: 1.125rem;
+}
+
+.no-data {
     text-align: center;
     color: var(--text-gray);
+    padding: var(--spacing-lg);
+    background: var(--background-gray);
+    border-radius: var(--radius-md);
+}
+
+.payment-form {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-md);
+}
+
+.payment-form .form-group {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-xs);
+}
+
+.payment-form label {
+    font-weight: 600;
+    color: var(--text-dark);
+    font-size: 0.875rem;
+}
+
+.payment-form input {
+    padding: var(--spacing-sm);
+    border: 1px solid var(--border-gray);
+    border-radius: var(--radius-md);
+    font-size: 0.875rem;
+}
+
+.payment-form input:focus {
+    border-color: var(--primary-red);
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(220, 38, 38, 0.1);
+}
+
+.note {
+    font-size: 0.75rem;
+    color: var(--text-gray);
+    margin-top: var(--spacing-sm);
+    text-align: center;
+}
+
+.payment-success {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--spacing-md);
+    padding: var(--spacing-xl);
+    text-align: center;
+}
+
+.payment-success p {
+    margin: 0;
+    color: var(--text-dark);
+}
+
+.payment-success strong {
+    color: #10B981;
+    font-size: 1.125rem;
 }

@@ -1,7 +1,7 @@
-import { X } from 'lucide-react';
+import { X, CheckCircle, XCircle } from 'lucide-react';
 import './RoomDetailsModal.css';
 
-function RoomDetailsModal({ isOpen, onClose, room }) {
+function RoomDetailsModal({ isOpen, onClose, room, onTenantClick }) {
     if (!isOpen || !room) return null;
 
     return (
@@ -37,14 +37,39 @@ function RoomDetailsModal({ isOpen, onClose, room }) {
 
                 <div className="tenants-section">
                     <h3>Current Tenants</h3>
-                    {(!room.currentTenants || room.currentTenants === 0) ? (
+                    {(!room.tenants || room.tenants.length === 0) ? (
                         <p className="no-tenants">No tenants assigned to this room yet.</p>
                     ) : (
-                        <p className="info-text">
-                            {room.currentTenants} tenant(s) currently assigned.
-                            <br />
-                            <small>Full tenant details will be available in the Tenants Management page.</small>
-                        </p>
+                        <div className="tenants-list">
+                            {room.tenants.map(tenant => (
+                                <div
+                                    key={tenant.id}
+                                    className="tenant-item clickable"
+                                    onClick={() => onTenantClick && onTenantClick(tenant)}
+                                >
+                                    <div className="tenant-avatar">
+                                        {tenant.name.charAt(0)}
+                                    </div>
+                                    <div className="tenant-info">
+                                        <strong>{tenant.name}</strong>
+                                        <p>Age: {tenant.age || 'N/A'}</p>
+                                    </div>
+                                    <div className="payment-status">
+                                        {tenant.hasPaidThisMonth ? (
+                                            <div className="status-paid">
+                                                <CheckCircle size={16} />
+                                                <span>Paid</span>
+                                            </div>
+                                        ) : (
+                                            <div className="status-unpaid">
+                                                <XCircle size={16} />
+                                                <span>Unpaid</span>
+                                            </div>
+                                        )}
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
                     )}
                 </div>
             </div>

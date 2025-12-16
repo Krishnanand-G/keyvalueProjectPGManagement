@@ -5,6 +5,7 @@ import SignIn from './pages/SignIn';
 import TenantHome from './pages/TenantHome';
 import LandlordHome from './pages/LandlordHome';
 import ComplaintsPage from './pages/ComplaintsPage';
+import TenantsPage from './pages/TenantsPage';
 import './App.css';
 
 function App() {
@@ -54,6 +55,16 @@ function App() {
                         ) : (
                             <Navigate to="/signin" replace />
                         )
+                    }
+                />
+
+                {/* Tenants Management - landlord only */}
+                <Route
+                    path="/tenants"
+                    element={
+                        <ProtectedRoute requiredRole="landlord">
+                            <TenantsPage />
+                        </ProtectedRoute>
                     }
                 />
 

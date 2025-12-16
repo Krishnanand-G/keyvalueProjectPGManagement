@@ -4,6 +4,8 @@ import dotenv from 'dotenv';
 import authRoutes from './routes/auth.js';
 import roomsRoutes from './routes/rooms.js';
 import complaintsRoutes from './routes/complaints.js';
+import tenantsRoutes from './routes/tenants.js';
+import paymentsRoutes from './routes/payments.js';
 import { seedDatabase } from './db/seed.js';
 
 dotenv.config();
@@ -25,6 +27,8 @@ app.use(express.json());
 app.use('/api/auth', authRoutes);
 app.use('/api/rooms', roomsRoutes);
 app.use('/api/complaints', complaintsRoutes);
+app.use('/api/tenants', tenantsRoutes);
+app.use('/api/payments', paymentsRoutes);
 
 // Health check
 app.get('/health', (req, res) => {

@@ -1,13 +1,9 @@
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
-import { LogOut } from 'lucide-react';
-import AlertsSection from '../components/AlertsSection';
-import ProfileCard from '../components/ProfileCard';
-import RoommatesList from '../components/RoommatesList';
-import RentPaymentForm from '../components/RentPaymentForm';
+import { LogOut, MessageSquare, Home } from 'lucide-react';
 import './TenantHome.css';
 
-function TenantHome({ profile, roommates, alerts }) {
+function TenantHome() {
     const { user, logout } = useAuth();
     const navigate = useNavigate();
 
@@ -20,25 +16,46 @@ function TenantHome({ profile, roommates, alerts }) {
         <div className="tenant-home">
             <div className="page-header">
                 <div>
-                    <h1>Welcome, {user?.username || profile.name}</h1>
-                    <p>Room {profile.roomNumber}</p>
+                    <h1>Welcome, {user?.name || user?.username}!</h1>
+                    <p>Tenant Dashboard</p>
                 </div>
-                <button className="btn-secondary logout-btn" onClick={handleLogout}>
-                    <LogOut size={16} />
-                    Logout
-                </button>
+                <div className="header-actions">
+                    <button className="btn-secondary" onClick={() => navigate('/complaints')}>
+                        <MessageSquare size={16} />
+                        Complaints
+                    </button>
+                    <button className="btn-secondary logout-btn" onClick={handleLogout}>
+                        <LogOut size={16} />
+                        Logout
+                    </button>
+                </div>
             </div>
 
-            <AlertsSection alerts={alerts} />
-
             <div className="tenant-grid">
-                <div className="grid-left">
-                    <ProfileCard profile={profile} />
-                    <RoommatesList roommates={roommates} />
+                <div className="info-card">
+                    <Home size={32} className="card-icon" />
+                    <h2>Your Room</h2>
+                    <p>Room information will be displayed here</p>
                 </div>
-                <div className="grid-right">
-                    <RentPaymentForm />
+
+                <div className="info-card">
+                    <MessageSquare size={32} className="card-icon" />
+                    <h2>Complaints</h2>
+                    <p>Lodge and track your complaints</p>
+                    <button className="btn-primary" onClick={() => navigate('/complaints')}>
+                        View Complaints
+                    </button>
                 </div>
+
+                <div className="info-card">
+                    <div style={{ fontSize: '2rem' }}>💰</div>
+                    <h2>Rent Payments</h2>
+                    <p>Coming soon</p>
+                </div>
+            </div>
+
+            <div className="info-banner">
+                <p><strong>Logged in as:</strong> {user?.username} ({user?.role})</p>
             </div>
         </div>
     );

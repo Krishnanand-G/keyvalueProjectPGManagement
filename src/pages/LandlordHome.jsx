@@ -69,6 +69,9 @@ function LandlordHome() {
                         <UserPlus size={16} />
                         Add Tenant
                     </button>
+                    <button className="btn-secondary" onClick={() => navigate('/complaints')}>
+                        Complaints
+                    </button>
                     <button className="btn-secondary logout-btn" onClick={handleLogout}>
                         <LogOut size={16} />
                         Logout

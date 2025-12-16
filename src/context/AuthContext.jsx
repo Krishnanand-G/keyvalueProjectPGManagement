@@ -40,6 +40,9 @@ export const AuthProvider = ({ children }) => {
             setUser(userData);
             setIsAuthenticated(true);
 
+            // Navigate based on role
+            window.location.href = userData.role === 'tenant' ? '/tenant' : '/landlord';
+
             return userData.role;
         } catch (error) {
             const message = error.response?.data?.error || 'Login failed';

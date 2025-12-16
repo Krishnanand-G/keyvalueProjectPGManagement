@@ -1,7 +1,7 @@
 import { X } from 'lucide-react';
 import './RoomDetailsModal.css';
 
-function RoomDetailsModal({ isOpen, onClose, room, onTenantClick }) {
+function RoomDetailsModal({ isOpen, onClose, room }) {
     if (!isOpen || !room) return null;
 
     return (
@@ -9,38 +9,42 @@ function RoomDetailsModal({ isOpen, onClose, room, onTenantClick }) {
             <div className="modal-content" onClick={(e) => e.stopPropagation()}>
                 <div className="modal-header">
                     <h2>Room {room.roomNumber} Details</h2>
-                    <button className="close-btn" onClick={onClose}><X size={18} /></button>
+                    <button className="close-btn" onClick={onClose}>
+                        <X size={18} />
+                    </button>
                 </div>
 
-                <div className="room-info">
-                    <p className="occupancy-text">
-                        Occupancy: {room.currentOccupancy} / {room.maxOccupancy}
-                    </p>
+                <div className="room-details-info">
+                    <div className="detail-item">
+                        <span className="label">Max Tenants:</span>
+                        <span className="value">{room.maxTenants}</span>
+                    </div>
+                    <div className="detail-item">
+                        <span className="label">Current Occupancy:</span>
+                        <span className="value">{room.currentTenants || 0}/{room.maxTenants}</span>
+                    </div>
+                    <div className="detail-item">
+                        <span className="label">Rent Per Tenant:</span>
+                        <span className="value">₹{room.rentPerTenant}</span>
+                    </div>
+                    <div className="detail-item">
+                        <span className="label">Status:</span>
+                        <span className={`status-badge ${(room.currentTenants || 0) < room.maxTenants ? 'available' : 'full'}`}>
+                            {(room.currentTenants || 0) < room.maxTenants ? 'Available' : 'Full'}
+                        </span>
+                    </div>
                 </div>
 
                 <div className="tenants-section">
-                    <h3>Tenants</h3>
-                    {room.tenants.length === 0 ? (
-                        <p className="empty-message">No tenants in this room</p>
+                    <h3>Current Tenants</h3>
+                    {(!room.currentTenants || room.currentTenants === 0) ? (
+                        <p className="no-tenants">No tenants assigned to this room yet.</p>
                     ) : (
-                        <div className="tenants-list">
-                            {room.tenants.map(tenant => (
-                                <div
-                                    key={tenant.id}
-                                    className="tenant-item"
-                                    onClick={() => onTenantClick(tenant)}
-                                >
-                                    <div className="tenant-avatar">
-                                        {tenant.name.charAt(0)}
-                                    </div>
-                                    <div className="tenant-info">
-                                        <p className="tenant-name">{tenant.name}</p>
-                                        <p className="tenant-age">Age: {tenant.age}</p>
-                                    </div>
-                                    <span className="view-arrow">→</span>
-                                </div>
-                            ))}
-                        </div>
+                        <p className="info-text">
+                            {room.currentTenants} tenant(s) currently assigned.
+                            <br />
+                            <small>Full tenant details will be available in the Tenants Management page.</small>
+                        </p>
                     )}
                 </div>
             </div>

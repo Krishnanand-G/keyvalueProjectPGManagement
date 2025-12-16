@@ -1,79 +1,71 @@
-.room-info {
-    margin-bottom: var(--spacing-xl);
-    padding: var(--spacing-lg);
-    background: var(--accent-pink);
-    border-radius: var(--radius-md);
-}
-
-.room-info .occupancy-text {
-    color: var(--text-dark);
-    font-weight: 600;
-    font-size: 1.125rem;
-}
-
-.tenants-section h3 {
-    color: var(--text-dark);
+.room-details-info {
+    display: grid;
+    gap: var(--spacing-md);
     margin-bottom: var(--spacing-lg);
-    font-size: 1.125rem;
 }
 
-.empty-message {
-    color: var(--text-gray);
-    text-align: center;
-    padding: var(--spacing-xl);
-}
-
-.tenants-list {
+.detail-item {
     display: flex;
-    flex-direction: column;
-    gap: var(--spacing-md);
-}
-
-.tenant-item {
-    display: flex;
+    justify-content: space-between;
     align-items: center;
-    gap: var(--spacing-md);
-    padding: var(--spacing-md);
+    padding: var(--spacing-sm);
     background: var(--background-gray);
     border-radius: var(--radius-md);
-    cursor: pointer;
-    transition: all 0.2s;
 }
 
-.tenant-item:hover {
-    background: var(--accent-pink);
-    transform: translateX(4px);
-}
-
-.tenant-avatar {
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-    background: var(--primary-red);
-    color: white;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-weight: 600;
-}
-
-.tenant-info {
-    flex: 1;
-}
-
-.tenant-name {
-    color: var(--text-dark);
-    font-weight: 600;
-    margin-bottom: var(--spacing-xs);
-}
-
-.tenant-age {
+.detail-item .label {
     color: var(--text-gray);
+    font-weight: 600;
     font-size: 0.875rem;
 }
 
-.view-arrow {
-    color: var(--primary-red);
-    font-size: 1.5rem;
+.detail-item .value {
+    color: var(--text-dark);
     font-weight: 600;
+}
+
+.detail-item .status-badge {
+    padding: 0.25rem 0.75rem;
+    border-radius: 1rem;
+    font-size: 0.75rem;
+    font-weight: 600;
+}
+
+.detail-item .status-badge.available {
+    background: #D1FAE5;
+    color: #065F46;
+}
+
+.detail-item .status-badge.full {
+    background: #FEE2E2;
+    color: #991B1B;
+}
+
+.tenants-section {
+    border-top: 1px solid var(--border-gray);
+    padding-top: var(--spacing-lg);
+}
+
+.tenants-section h3 {
+    margin-bottom: var(--spacing-md);
+    font-size: 1rem;
+    color: var(--text-dark);
+}
+
+.no-tenants {
+    text-align: center;
+    color: var(--text-gray);
+    padding: var(--spacing-lg);
+    background: var(--background-gray);
+    border-radius: var(--radius-md);
+}
+
+.info-text {
+    color: var(--text-gray);
+    line-height: 1.6;
+}
+
+.info-text small {
+    color: #999;
+    font-size: 0.75rem;
 }

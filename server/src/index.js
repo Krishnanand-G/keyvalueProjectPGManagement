@@ -3,6 +3,7 @@ import cors from 'cors';
 import dotenv from 'dotenv';
 import authRoutes from './routes/auth.js';
 import roomsRoutes from './routes/rooms.js';
+import complaintsRoutes from './routes/complaints.js';
 import { seedDatabase } from './db/seed.js';
 
 dotenv.config();
@@ -23,6 +24,7 @@ app.use(express.json());
 // Routes
 app.use('/api/auth', authRoutes);
 app.use('/api/rooms', roomsRoutes);
+app.use('/api/complaints', complaintsRoutes);
 
 // Health check
 app.get('/health', (req, res) => {

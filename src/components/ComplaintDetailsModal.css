@@ -1,0 +1,52 @@
+.complaint-details-modal {
+    max-width: 600px;
+}
+
+.complaint-details {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-lg);
+}
+
+.detail-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: var(--spacing-sm);
+    background: var(--background-gray);
+    border-radius: var(--radius-md);
+}
+
+.detail-row .label {
+    font-weight: 600;
+    color: var(--text-gray);
+}
+
+.detail-row .value {
+    color: var(--text-dark);
+}
+
+.detail-section {
+    padding: var(--spacing-md);
+    background: var(--background-gray);
+    border-radius: var(--radius-md);
+}
+
+.detail-section h3 {
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: var(--text-gray);
+    margin-bottom: var(--spacing-sm);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.detail-section p {
+    color: var(--text-dark);
+    line-height: 1.6;
+}
+
+.landlord-response {
+    background: #FEF3C7;
+    border-left: 3px solid #F59E0B;
+}

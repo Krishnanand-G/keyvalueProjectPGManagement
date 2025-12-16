@@ -1,0 +1,80 @@
+.complaint-card {
+    background: white;
+    padding: var(--spacing-lg);
+    border-radius: var(--radius-lg);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    cursor: pointer;
+    transition: all 0.2s;
+    border: 1px solid var(--border-gray);
+}
+
+.complaint-card:hover {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    transform: translateY(-2px);
+}
+
+.complaint-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: var(--spacing-md);
+}
+
+.status-badge {
+    padding: 0.25rem 0.75rem;
+    border-radius: 1rem;
+    font-size: 0.75rem;
+    font-weight: 600;
+}
+
+.status-open {
+    background: #FEE2E2;
+    color: #991B1B;
+}
+
+.status-progress {
+    background: #FEF3C7;
+    color: #92400E;
+}
+
+.status-resolved {
+    background: #D1FAE5;
+    color: #065F46;
+}
+
+.complaint-date {
+    font-size: 0.75rem;
+    color: var(--text-gray);
+}
+
+.complaint-title {
+    font-size: 1.125rem;
+    font-weight: 600;
+    color: var(--text-dark);
+    margin-bottom: var(--spacing-sm);
+}
+
+.complaint-description {
+    color: var(--text-gray);
+    line-height: 1.5;
+    margin-bottom: var(--spacing-md);
+}
+
+.landlord-remark-preview {
+    background: var(--background-gray);
+    padding: var(--spacing-sm);
+    border-radius: var(--radius-md);
+    font-size: 0.875rem;
+    margin-bottom: var(--spacing-sm);
+}
+
+.complaint-footer {
+    padding-top: var(--spacing-sm);
+    border-top: 1px solid var(--border-gray);
+}
+
+.click-hint {
+    font-size: 0.75rem;
+    color: var(--primary-red);
+    font-weight: 500;
+}

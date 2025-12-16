@@ -4,6 +4,7 @@ import ProtectedRoute from './components/ProtectedRoute';
 import SignIn from './pages/SignIn';
 import TenantHome from './pages/TenantHome';
 import LandlordHome from './pages/LandlordHome';
+import ComplaintsPage from './pages/ComplaintsPage';
 import './App.css';
 
 function App() {
@@ -29,11 +30,7 @@ function App() {
                     path="/tenant"
                     element={
                         <ProtectedRoute requiredRole="tenant">
-                            <TenantHome
-                                profile={mockTenantProfile}
-                                roommates={mockRoommates}
-                                alerts={mockAlerts}
-                            />
+                            <TenantHome />
                         </ProtectedRoute>
                     }
                 />
@@ -45,6 +42,18 @@ function App() {
                         <ProtectedRoute requiredRole="landlord">
                             <LandlordHome />
                         </ProtectedRoute>
+                    }
+                />
+
+                {/* Complaints - accessible to both roles */}
+                <Route
+                    path="/complaints"
+                    element={
+                        isAuthenticated ? (
+                            <ComplaintsPage />
+                        ) : (
+                            <Navigate to="/signin" replace />
+                        )
                     }
                 />
 

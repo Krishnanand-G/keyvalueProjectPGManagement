@@ -19,16 +19,10 @@ function SignIn() {
         setIsLoading(true);
 
         try {
-            const role = login(username, password);
-
-            // Redirect based on role
-            if (role === 'tenant') {
-                navigate('/tenant', { replace: true });
-            } else if (role === 'landlord') {
-                navigate('/landlord', { replace: true });
-            }
+            await login(username, password);
+            // Navigation happens automatically via AuthContext
         } catch (err) {
-            setError(err.message);
+            setError(err.message || 'Invalid username or password');
         } finally {
             setIsLoading(false);
         }

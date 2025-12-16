@@ -16,12 +16,13 @@ const PORT = process.env.PORT || 3001;
 // Seed database on startup
 seedDatabase();
 
-// Middleware
+// Middleware - Increase limit for base64 images
 app.use(cors({
     origin: 'http://localhost:5173', // Vite dev server
     credentials: true,
 }));
-app.use(express.json());
+app.use(express.json({ limit: '10mb' })); // Increased from default 100kb
+app.use(express.urlencoded({ limit: '10mb', extended: true }));
 
 // Routes
 app.use('/api/auth', authRoutes);

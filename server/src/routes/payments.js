@@ -125,6 +125,12 @@ router.post('/', authenticateToken, requireRole('tenant'), async (req, res) => {
     try {
         const { month, proofUrl } = req.body;
 
+        console.log('Payment submission attempt:', {
+            userId: req.user.id,
+            month: month,
+            proofUrlLength: proofUrl ? proofUrl.length : 0
+        });
+
         if (!month) {
             return res.status(400).json({ error: 'Month is required' });
         }
@@ -150,13 +156,16 @@ router.post('/', authenticateToken, requireRole('tenant'), async (req, res) => {
             proofUrl: proofUrl || null,
         }).returning();
 
+        console.log('Payment created successfully:', newPayment.id);
+
         res.status(201).json({
             message: 'Payment submitted successfully',
             payment: newPayment,
         });
     } catch (error) {
         console.error('Submit payment error:', error);
-        res.status(500).json({ error: 'Internal server error' });
+        console.error('Error details:', error.message);
+        res.status(500).json({ error: 'Internal server error: ' + error.message });
     }
 });
 

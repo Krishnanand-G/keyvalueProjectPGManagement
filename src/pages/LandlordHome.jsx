@@ -47,6 +47,10 @@ function LandlordHome({ rooms }) {
                     <button className="btn-primary" onClick={() => setIsAddRoomOpen(true)}>
                         + Add Room
                     </button>
+                    <button className="btn-primary" onClick={() => setIsAddTenantOpen(true)}>
+                        <UserPlus size={16} />
+                        Add Tenant
+                    </button>
                     <button className="btn-secondary logout-btn" onClick={handleLogout}>
                         <LogOut size={16} />
                         Logout
@@ -67,6 +71,11 @@ function LandlordHome({ rooms }) {
             <AddRoomModal
                 isOpen={isAddRoomOpen}
                 onClose={() => setIsAddRoomOpen(false)}
+            />
+
+            <AddTenantModal
+                isOpen={isAddTenantOpen}
+                onClose={() => setIsAddTenantOpen(false)}
             />
 
             <RoomDetailsModal

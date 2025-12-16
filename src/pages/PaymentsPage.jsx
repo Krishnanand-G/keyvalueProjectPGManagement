@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { LogOut, CheckCircle, XCircle, Clock } from 'lucide-react';
 import api from '../utils/api';
+import PaymentProofModal from '../components/PaymentProofModal';
 import './PaymentsPage.css';
 
 function PaymentsPage() {
@@ -10,6 +11,7 @@ function PaymentsPage() {
     const [selectedMonth, setSelectedMonth] = useState('current');
     const [currentMonth, setCurrentMonth] = useState('');
     const [isLoading, setIsLoading] = useState(false);
+    const [selectedProof, setSelectedProof] = useState(null);
     const { logout } = useAuth();
     const navigate = useNavigate();
 
@@ -161,9 +163,12 @@ function PaymentsPage() {
                                     <td>{getStatusBadge(payment.status)}</td>
                                     <td>
                                         {payment.proofUrl ? (
-                                            <a href={payment.proofUrl} target="_blank" rel="noopener noreferrer" className="proof-link">
+                                            <button
+                                                className="proof-link"
+                                                onClick={() => setSelectedProof(payment.proofUrl)}
+                                            >
                                                 View Proof
-                                            </a>
+                                            </button>
                                         ) : (
                                             <span className="no-proof">No proof</span>
                                         )}
@@ -199,6 +204,12 @@ function PaymentsPage() {
                     </table>
                 </div>
             )}
+
+            <PaymentProofModal
+                isOpen={selectedProof !== null}
+                onClose={() => setSelectedProof(null)}
+                imageUrl={selectedProof}
+            />
         </div>
     );
 }

@@ -13,6 +13,8 @@ function TenantHome() {
     const [hasPaidThisMonth, setHasPaidThisMonth] = useState(false);
     const [currentMonth, setCurrentMonth] = useState('');
     const [selectedRoommate, setSelectedRoommate] = useState(null);
+    const [paymentProof, setPaymentProof] = useState(null);
+    const [isSubmitting, setIsSubmitting] = useState(false);
     const { user, logout } = useAuth();
     const navigate = useNavigate();
 
@@ -51,17 +53,35 @@ function TenantHome() {
         }
     };
 
+    const handleFileChange = (e) => {
+        const file = e.target.files[0];
+        if (file) {
+            // Convert image to base64
+            const reader = new FileReader();
+            reader.onloadend = () => {
+                setPaymentProof(reader.result);
+            };
+            reader.readAsDataURL(file);
+        }
+    };
+
     const handlePaymentSubmit = async (e) => {
         e.preventDefault();
+        setIsSubmitting(true);
         try {
             await api.post('/payments', {
                 month: currentMonth,
-                proofUrl: 'uploaded', // Placeholder, would integrate with Supabase Storage
+                proofUrl: paymentProof || null,
             });
             alert('Payment submitted successfully!');
             setHasPaidThisMonth(true);
+            setPaymentProof(null);
         } catch (error) {
-            alert(error.response?.data?.error || 'Failed to submit payment');
+            console.error('Payment submission error:', error);
+            const errorMsg = error.response?.data?.error || error.message || 'Failed to submit payment';
+            alert('Error: ' + errorMsg);
+        } finally {
+            setIsSubmitting(false);
         }
     };
 
@@ -201,14 +221,23 @@ function TenantHome() {
                                     type="month"
                                     value={currentMonth}
                                     onChange={(e) => setCurrentMonth(e.target.value)}
+                                    required
                                 />
                             </div>
                             <div className="form-group">
-                                <label>Upload Payment Proof</label>
-                                <input type="file" accept="image/*" />
+                                <label>Upload Payment Proof *</label>
+                                <input
+                                    type="file"
+                                    accept="image/*"
+                                    onChange={handleFileChange}
+                                    required
+                                />
+                                {paymentProof && (
+                                    <p className="file-selected">✓ Image selected</p>
+                                )}
                             </div>
-                            <button type="submit" className="btn-primary">
-                                Submit Payment
+                            <button type="submit" className="btn-primary" disabled={isSubmitting || !paymentProof}>
+                                {isSubmitting ? 'Submitting...' : 'Submit Payment'}
                             </button>
                             <p className="note">Upload screenshot of your payment transaction</p>
                         </form>

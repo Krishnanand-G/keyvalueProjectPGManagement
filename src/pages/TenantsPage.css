@@ -91,3 +91,23 @@
     padding: var(--spacing-xl);
     color: var(--text-gray);
 }
+
+.payment-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.25rem 0.75rem;
+    border-radius: 1rem;
+    font-size: 0.75rem;
+    font-weight: 600;
+}
+
+.payment-badge.paid {
+    background: #D1FAE5;
+    color: #065F46;
+}
+
+.payment-badge.unpaid {
+    background: #FEE2E2;
+    color: #991B1B;
+}

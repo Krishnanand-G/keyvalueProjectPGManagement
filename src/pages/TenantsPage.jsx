@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
-import { LogOut, UserPlus, Edit, Trash2 } from 'lucide-react';
+import { LogOut, UserPlus, Edit, Trash2, CheckCircle, XCircle } from 'lucide-react';
 import api from '../utils/api';
 import AddTenantModal from '../components/AddTenantModal';
 import EditTenantModal from '../components/EditTenantModal';
@@ -76,13 +76,14 @@ function TenantsPage() {
                             <th>Age</th>
                             <th>Phone</th>
                             <th>Caution Deposit</th>
+                            <th>Payment Status</th>
                             <th>Actions</th>
                         </tr>
                     </thead>
                     <tbody>
                         {tenants.length === 0 ? (
                             <tr>
-                                <td colSpan="7" className="no-data">
+                                <td colSpan="8" className="no-data">
                                     No tenants found. Click "Add Tenant" to create one.
                                 </td>
                             </tr>
@@ -101,6 +102,19 @@ function TenantsPage() {
                                     <td>{tenant.age || 'N/A'}</td>
                                     <td>{tenant.phone || 'N/A'}</td>
                                     <td>₹{tenant.cautionDeposit || 0}</td>
+                                    <td>
+                                        {tenant.hasPaidThisMonth ? (
+                                            <span className="payment-badge paid">
+                                                <CheckCircle size={14} />
+                                                Paid
+                                            </span>
+                                        ) : (
+                                            <span className="payment-badge unpaid">
+                                                <XCircle size={14} />
+                                                Unpaid
+                                            </span>
+                                        )}
+                                    </td>
                                     <td className="actions">
                                         <button
                                             className="icon-btn edit-btn"

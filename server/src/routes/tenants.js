@@ -1,14 +1,17 @@
+```javascript
 import express from 'express';
 import { db } from '../config/db.js';
-import { users, rooms } from '../db/schema.js';
+import { users, rooms, payments } from '../db/schema.js';
 import { authenticateToken, requireRole } from '../middleware/auth.js';
-import { eq, sql } from 'drizzle-orm';
+import { eq, sql, and } from 'drizzle-orm';
 
 const router = express.Router();
 
 // GET /api/tenants - Get all tenants (landlord only)
 router.get('/', authenticateToken, requireRole('landlord'), async (req, res) => {
     try {
+        const currentMonth = new Date().toISOString().slice(0, 7);
+        
         // Get all users with role 'tenant' and join with rooms
         const allTenants = await db
             .select({
@@ -26,7 +29,27 @@ router.get('/', authenticateToken, requireRole('landlord'), async (req, res) => 
             .leftJoin(rooms, eq(users.roomId, rooms.id))
             .where(eq(users.role, 'tenant'));
 
-        res.json({ tenants: allTenants });
+        // Check payment status for each tenant
+        const tenantsWithPaymentStatus = await Promise.all(
+            allTenants.map(async (tenant) => {
+                const [payment] = await db
+                    .select()
+                    .from(payments)
+                    .where(
+                        and(
+                            eq(payments.userId, tenant.id),
+                            eq(payments.month, currentMonth)
+                        )
+                    );
+                
+                return {
+                    ...tenant,
+                    hasPaidThisMonth: !!payment,
+                };
+            })
+        );
+
+        res.json({ tenants: tenantsWithPaymentStatus });
     } catch (error) {
         console.error('Get tenants error:', error);
         res.status(500).json({ error: 'Internal server error' });

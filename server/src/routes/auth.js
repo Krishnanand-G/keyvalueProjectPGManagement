@@ -1,10 +1,11 @@
 import express from 'express';
 import bcrypt from 'bcrypt';
+import jwt from 'jsonwebtoken';
 import { db } from '../config/db.js';
-import { users } from '../db/schema.js';
+import { users, rooms } from '../db/schema.js';
 import { generateToken } from '../utils/jwt.js';
 import { authenticateToken, requireRole } from '../middleware/auth.js';
-import { eq } from 'drizzle-orm';
+import { eq, sql } from 'drizzle-orm';
 
 const router = express.Router();
 
@@ -97,7 +98,7 @@ router.post('/login', async (req, res) => {
     }
 });
 
-// POST /api/auth/create-tenant - Landlord creates tenant account
+// POST /api/auth/create-tenant - Create a new tenant (landlord only)
 router.post('/create-tenant', authenticateToken, requireRole('landlord'), async (req, res) => {
     try {
         const { username, password, name, age, phone, roomId, cautionDeposit } = req.body;
@@ -106,10 +107,33 @@ router.post('/create-tenant', authenticateToken, requireRole('landlord'), async 
             return res.status(400).json({ error: 'Username, password, and name are required' });
         }
 
-        // Check if user already exists
-        const existingUser = await db.select().from(users).where(eq(users.username, username));
-        if (existingUser.length > 0) {
-            return res.status(409).json({ error: 'Username already exists' });
+        // Check if username already exists
+        const [existingUser] = await db.select().from(users).where(eq(users.username, username));
+        if (existingUser) {
+            return res.status(400).json({ error: 'Username already exists' });
+        }
+
+        // If roomId provided, check room capacity
+        if (roomId) {
+            const [room] = await db.select().from(rooms).where(eq(rooms.id, roomId));
+
+            if (!room) {
+                return res.status(404).json({ error: 'Room not found' });
+            }
+
+            // Count current tenants in the room
+            const currentTenants = await db
+                .select({ count: sql`count(*)` })
+                .from(users)
+                .where(eq(users.roomId, roomId));
+
+            const tenantCount = parseInt(currentTenants[0].count) || 0;
+
+            if (tenantCount >= room.maxTenants) {
+                return res.status(400).json({
+                    error: `Room ${room.roomNumber} is full (${tenantCount}/${room.maxTenants} tenants)`
+                });
+            }
         }
 
         // Hash password
@@ -129,11 +153,11 @@ router.post('/create-tenant', authenticateToken, requireRole('landlord'), async 
 
         res.status(201).json({
             message: 'Tenant created successfully',
-            tenant: {
+            user: {
                 id: newTenant.id,
                 username: newTenant.username,
-                role: newTenant.role,
                 name: newTenant.name,
+                role: newTenant.role,
             },
         });
     } catch (error) {

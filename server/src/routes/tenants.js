@@ -1,4 +1,3 @@
-```javascript
 import express from 'express';
 import { db } from '../config/db.js';
 import { users, rooms, payments } from '../db/schema.js';
@@ -11,7 +10,7 @@ const router = express.Router();
 router.get('/', authenticateToken, requireRole('landlord'), async (req, res) => {
     try {
         const currentMonth = new Date().toISOString().slice(0, 7);
-        
+
         // Get all users with role 'tenant' and join with rooms
         const allTenants = await db
             .select({
@@ -41,7 +40,7 @@ router.get('/', authenticateToken, requireRole('landlord'), async (req, res) => 
                             eq(payments.month, currentMonth)
                         )
                     );
-                
+
                 return {
                     ...tenant,
                     hasPaidThisMonth: !!payment,
@@ -108,6 +107,32 @@ router.patch('/:id', authenticateToken, requireRole('landlord'), async (req, res
     try {
         const { id } = req.params;
         const { name, age, phone, roomId, cautionDeposit } = req.body;
+
+        // If roomId is being updated, check room capacity
+        if (roomId) {
+            const [room] = await db.select().from(rooms).where(eq(rooms.id, roomId));
+
+            if (!room) {
+                return res.status(404).json({ error: 'Room not found' });
+            }
+
+            // Count current tenants in the room (excluding this tenant if already in it)
+            const currentTenants = await db
+                .select({ count: sql`count(*)` })
+                .from(users)
+                .where(and(
+                    eq(users.roomId, roomId),
+                    sql`${users.id} != ${id}`
+                ));
+
+            const tenantCount = parseInt(currentTenants[0].count) || 0;
+
+            if (tenantCount >= room.maxTenants) {
+                return res.status(400).json({
+                    error: `Room ${room.roomNumber} is full (${room.maxTenants}/${room.maxTenants} tenants)`
+                });
+            }
+        }
 
         const [updatedTenant] = await db
             .update(users)

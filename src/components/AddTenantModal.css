@@ -21,7 +21,8 @@
     font-size: 0.875rem;
 }
 
-.form-group input {
+.form-group input,
+.form-group select {
     padding: var(--spacing-sm);
     border: 1px solid var(--border-gray);
     border-radius: var(--radius-md);
@@ -29,7 +30,8 @@
     transition: all 0.2s;
 }
 
-.form-group input:focus {
+.form-group input:focus,
+.form-group select:focus {
     border-color: var(--primary-red);
     outline: none;
     box-shadow: 0 0 0 3px rgba(220, 38, 38, 0.1);

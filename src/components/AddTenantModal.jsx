@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { X } from 'lucide-react';
 import api from '../utils/api';
 import './AddTenantModal.css';
@@ -13,8 +13,25 @@ function AddTenantModal({ isOpen, onClose, onTenantCreated }) {
         roomId: '',
         cautionDeposit: '',
     });
+    const [rooms, setRooms] = useState([]);
     const [error, setError] = useState('');
     const [isLoading, setIsLoading] = useState(false);
+
+    // Fetch available rooms when modal opens
+    useEffect(() => {
+        if (isOpen) {
+            fetchRooms();
+        }
+    }, [isOpen]);
+
+    const fetchRooms = async () => {
+        try {
+            const response = await api.get('/rooms');
+            setRooms(response.data.rooms);
+        } catch (err) {
+            console.error('Failed to fetch rooms:', err);
+        }
+    };
 
     const handleChange = (e) => {
         setFormData({
@@ -150,15 +167,20 @@ function AddTenantModal({ isOpen, onClose, onTenantCreated }) {
 
                     <div className="form-row">
                         <div className="form-group">
-                            <label htmlFor="roomId">Room ID (Optional)</label>
-                            <input
-                                type="text"
+                            <label htmlFor="roomId">Room Assignment</label>
+                            <select
                                 id="roomId"
                                 name="roomId"
                                 value={formData.roomId}
                                 onChange={handleChange}
-                                placeholder="Leave empty if unassigned"
-                            />
+                            >
+                                <option value="">-- No Room Assigned --</option>
+                                {rooms.map((room) => (
+                                    <option key={room.id} value={room.id}>
+                                        Room {room.roomNumber} (Max: {room.maxTenants}, Rent: ₹{room.rentPerTenant})
+                                    </option>
+                                ))}
+                            </select>
                         </div>
 
                         <div className="form-group">

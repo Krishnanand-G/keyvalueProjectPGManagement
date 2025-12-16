@@ -4,7 +4,6 @@ import ProtectedRoute from './components/ProtectedRoute';
 import SignIn from './pages/SignIn';
 import TenantHome from './pages/TenantHome';
 import LandlordHome from './pages/LandlordHome';
-import { mockTenantProfile, mockRoommates, mockAlerts, mockRooms } from './data/mockData';
 import './App.css';
 
 function App() {
@@ -44,7 +43,7 @@ function App() {
                     path="/landlord"
                     element={
                         <ProtectedRoute requiredRole="landlord">
-                            <LandlordHome rooms={mockRooms} />
+                            <LandlordHome />
                         </ProtectedRoute>
                     }
                 />

@@ -1,6 +1,6 @@
 import bcrypt from 'bcrypt';
 import { db } from '../config/db.js';
-import { users } from '../db/schema.js';
+import { users, rooms } from '../db/schema.js';
 import { eq } from 'drizzle-orm';
 
 export async function seedDatabase() {
@@ -27,6 +27,22 @@ export async function seedDatabase() {
             console.log('✅ Hardcoded landlord created: landlord@pg.in / landlord123');
         } else {
             console.log('✅ Hardcoded landlord already exists');
+        }
+
+        // Check if default room exists
+        const existingRooms = await db.select().from(rooms);
+
+        if (existingRooms.length === 0) {
+            // Create one default room
+            await db.insert(rooms).values({
+                roomNumber: 101,
+                maxTenants: 2,
+                rentPerTenant: 5000,
+            });
+
+            console.log('✅ Default room created: Room 101 (Max 2 tenants, ₹5000/tenant)');
+        } else {
+            console.log(`✅ ${existingRooms.length} room(s) already exist in database`);
         }
 
         console.log('🌱 Database seeding complete');

@@ -1,19 +1,37 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
-import { LogOut } from 'lucide-react';
+import { LogOut, UserPlus } from 'lucide-react';
+import api from '../utils/api';
 import RoomCard from '../components/RoomCard';
 import AddRoomModal from '../components/AddRoomModal';
+import AddTenantModal from '../components/AddTenantModal';
 import RoomDetailsModal from '../components/RoomDetailsModal';
 import TenantDetailsModal from '../components/TenantDetailsModal';
 import './LandlordHome.css';
 
-function LandlordHome({ rooms }) {
+function LandlordHome() {
+    const [rooms, setRooms] = useState([]);
     const [isAddRoomOpen, setIsAddRoomOpen] = useState(false);
+    const [isAddTenantOpen, setIsAddTenantOpen] = useState(false);
     const [selectedRoom, setSelectedRoom] = useState(null);
     const [selectedTenant, setSelectedTenant] = useState(null);
     const { logout } = useAuth();
     const navigate = useNavigate();
+
+    // Fetch rooms on component mount
+    useEffect(() => {
+        fetchRooms();
+    }, []);
+
+    const fetchRooms = async () => {
+        try {
+            const response = await api.get('/rooms');
+            setRooms(response.data.rooms);
+        } catch (error) {
+            console.error('Failed to fetch rooms:', error);
+        }
+    };
 
     const handleRoomClick = (room) => {
         setSelectedRoom(room);
@@ -71,11 +89,13 @@ function LandlordHome({ rooms }) {
             <AddRoomModal
                 isOpen={isAddRoomOpen}
                 onClose={() => setIsAddRoomOpen(false)}
+                onRoomCreated={() => fetchRooms()}
             />
 
             <AddTenantModal
                 isOpen={isAddTenantOpen}
                 onClose={() => setIsAddTenantOpen(false)}
+                onTenantCreated={() => fetchRooms()}
             />
 
             <RoomDetailsModal

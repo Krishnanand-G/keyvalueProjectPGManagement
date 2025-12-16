@@ -56,10 +56,20 @@ function TenantHome() {
     const handleFileChange = (e) => {
         const file = e.target.files[0];
         if (file) {
+            // Check file size (limit to 2MB)
+            if (file.size > 2 * 1024 * 1024) {
+                alert('Image size must be less than 2MB. Please choose a smaller image.');
+                e.target.value = '';
+                return;
+            }
+
             // Convert image to base64
             const reader = new FileReader();
             reader.onloadend = () => {
                 setPaymentProof(reader.result);
+            };
+            reader.onerror = () => {
+                alert('Failed to read image file. Please try again.');
             };
             reader.readAsDataURL(file);
         }

@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { X } from 'lucide-react';
 import api from '../utils/api';
 import './ComplaintDetailsModal.css';
@@ -9,7 +9,7 @@ function ComplaintDetailsModal({ isOpen, onClose, complaint, isLandlord, onUpdat
     const [isLoading, setIsLoading] = useState(false);
 
     // Initialize form when complaint changes
-    useState(() => {
+    useEffect(() => {
         if (complaint) {
             setStatus(complaint.status);
             setLandlordRemark(complaint.landlordRemark || '');

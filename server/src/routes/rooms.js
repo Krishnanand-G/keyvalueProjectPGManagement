@@ -1,32 +1,60 @@
 import express from 'express';
 import { db } from '../config/db.js';
-import { rooms, users } from '../db/schema.js';
+import { rooms, users, payments } from '../db/schema.js';
 import { authenticateToken, requireRole } from '../middleware/auth.js';
-import { eq, sql } from 'drizzle-orm';
+import { eq, and } from 'drizzle-orm';
 
 const router = express.Router();
 
-// GET /api/rooms - Get all rooms with current tenant count
+// GET /api/rooms - Get all rooms with tenant details and payment status
 router.get('/', authenticateToken, async (req, res) => {
     try {
         const allRooms = await db.select().from(rooms);
+        const currentMonth = new Date().toISOString().slice(0, 7);
 
-        // For each room, count how many tenants are assigned
-        const roomsWithTenantCount = await Promise.all(
+        // For each room, get tenant details with payment status
+        const roomsWithDetails = await Promise.all(
             allRooms.map(async (room) => {
-                const tenantCount = await db
-                    .select({ count: sql`count(*)` })
+                const tenants = await db
+                    .select({
+                        id: users.id,
+                        name: users.name,
+                        age: users.age,
+                        phone: users.phone,
+                        username: users.username,
+                    })
                     .from(users)
                     .where(eq(users.roomId, room.id));
 
+                // Check payment status for each tenant
+                const tenantsWithPayment = await Promise.all(
+                    tenants.map(async (tenant) => {
+                        const [payment] = await db
+                            .select()
+                            .from(payments)
+                            .where(
+                                and(
+                                    eq(payments.userId, tenant.id),
+                                    eq(payments.month, currentMonth)
+                                )
+                            );
+
+                        return {
+                            ...tenant,
+                            hasPaidThisMonth: !!payment,
+                        };
+                    })
+                );
+
                 return {
                     ...room,
-                    currentTenants: parseInt(tenantCount[0].count) || 0,
+                    currentTenants: tenants.length,
+                    tenants: tenantsWithPayment,
                 };
             })
         );
 
-        res.json({ rooms: roomsWithTenantCount });
+        res.json({ rooms: roomsWithDetails });
     } catch (error) {
         console.error('Get rooms error:', error);
         res.status(500).json({ error: 'Internal server error' });
@@ -50,7 +78,7 @@ router.post('/', authenticateToken, requireRole('landlord'), async (req, res) =>
 
         res.status(201).json({
             message: 'Room created successfully',
-            room: { ...newRoom, currentTenants: 0 },
+            room: { ...newRoom, currentTenants: 0, tenants: [] },
         });
     } catch (error) {
         console.error('Create room error:', error);

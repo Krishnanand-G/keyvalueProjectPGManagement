@@ -43,11 +43,11 @@ export const complaints = pgTable('complaints', {
 
 // Payments table
 export const payments = pgTable('payments', {
-    id: uuid('id').primaryKey().defaultRandom(),
-    userId: uuid('user_id').notNull().references(() => users.id),
-    month: text('month').notNull(), // Format: "2025-03"
-    imageUrl: text('image_url'), // Supabase Storage URL
-    amount: integer('amount').notNull(),
-    status: paymentStatusEnum('status').notNull().default('submitted'),
-    createdAt: timestamp('created_at').defaultNow(),
+    id: uuid('id').defaultRandom().primaryKey(),
+    userId: uuid('user_id').references(() => users.id).notNull(),
+    month: text('month').notNull(), // Format: YYYY-MM
+    proofUrl: text('proof_url'),
+    amount: integer('amount'),
+    status: paymentStatusEnum('status').default('submitted'),
+    createdAt: timestamp('created_at').defaultNow().notNull(),
 });

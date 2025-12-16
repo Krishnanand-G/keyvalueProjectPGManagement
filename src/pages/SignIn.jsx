@@ -86,13 +86,16 @@ function SignIn() {
                     </form>
 
                     <div className="signin-footer">
-                        <p className="demo-credentials">Demo Credentials:</p>
+                        <p className="demo-credentials">Testing Instructions:</p>
                         <div className="credentials-list">
                             <div className="credential-item">
-                                <strong>Tenant:</strong> tenant123 / tenant123
+                                <strong>Step 1:</strong> Create landlord account via /api/auth/register
                             </div>
                             <div className="credential-item">
-                                <strong>Landlord:</strong> admin / admin
+                                <strong>Step 2:</strong> Login with your created credentials
+                            </div>
+                            <div className="credential-item">
+                                Real authentication with Supabase database
                             </div>
                         </div>
                     </div>

@@ -13,6 +13,7 @@
   "description": "",
   "dependencies": {
     "@vitejs/plugin-react": "^5.1.2",
+    "axios": "^1.13.2",
     "lucide-react": "^0.561.0",
     "react": "^19.2.3",
     "react-dom": "^19.2.3",

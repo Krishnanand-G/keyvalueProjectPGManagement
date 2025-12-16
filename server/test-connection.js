@@ -3,8 +3,8 @@ import dotenv from 'dotenv';
 
 dotenv.config();
 
-// Properly URL-encoded password: XQwQ!aGr%!X7u!x becomes XQwQ%21aGr%25%21X7u%21x
-const connectionString = 'postgresql://postgres:XQwQ%21aGr%25%21X7u%21x@db.hednuhhpsbfexvyzoqlk.supabase.co:5432/postgres';
+// Session Pooler connection (IPv4 compatible)
+const connectionString = 'postgresql://postgres.hednuhhpsbfexvyzoqlk:XQwQ%21aGr%25%21X7u%21x@aws-1-ap-southeast-1.pooler.supabase.com:5432/postgres';
 
 console.log('Testing connection to Supabase...');
 

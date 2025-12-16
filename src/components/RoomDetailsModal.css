@@ -1,0 +1,79 @@
+.room-info {
+    margin-bottom: var(--spacing-xl);
+    padding: var(--spacing-lg);
+    background: var(--accent-pink);
+    border-radius: var(--radius-md);
+}
+
+.room-info .occupancy-text {
+    color: var(--text-dark);
+    font-weight: 600;
+    font-size: 1.125rem;
+}
+
+.tenants-section h3 {
+    color: var(--text-dark);
+    margin-bottom: var(--spacing-lg);
+    font-size: 1.125rem;
+}
+
+.empty-message {
+    color: var(--text-gray);
+    text-align: center;
+    padding: var(--spacing-xl);
+}
+
+.tenants-list {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-md);
+}
+
+.tenant-item {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-md);
+    padding: var(--spacing-md);
+    background: var(--background-gray);
+    border-radius: var(--radius-md);
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.tenant-item:hover {
+    background: var(--accent-pink);
+    transform: translateX(4px);
+}
+
+.tenant-avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: var(--primary-red);
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 600;
+}
+
+.tenant-info {
+    flex: 1;
+}
+
+.tenant-name {
+    color: var(--text-dark);
+    font-weight: 600;
+    margin-bottom: var(--spacing-xs);
+}
+
+.tenant-age {
+    color: var(--text-gray);
+    font-size: 0.875rem;
+}
+
+.view-arrow {
+    color: var(--primary-red);
+    font-size: 1.5rem;
+    font-weight: 600;
+}

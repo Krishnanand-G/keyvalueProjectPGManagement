@@ -17,7 +17,7 @@ function TenantDetailsModal({ isOpen, onClose, tenant }) {
                         {tenant.name.charAt(0)}
                     </div>
 
-                    <div className="details-grid">
+                    <div className="details-grid" style={{ border: '5px solid #000000ff' }}>
                         <div className="detail-item">
                             <span className="detail-label">Name</span>
                             <span className="detail-value">{tenant.name}</span>

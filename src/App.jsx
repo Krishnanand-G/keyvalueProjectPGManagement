@@ -6,6 +6,7 @@ import TenantHome from './pages/TenantHome';
 import LandlordHome from './pages/LandlordHome';
 import ComplaintsPage from './pages/ComplaintsPage';
 import TenantsPage from './pages/TenantsPage';
+import PaymentsPage from './pages/PaymentsPage';
 import './App.css';
 
 function App() {
@@ -64,6 +65,16 @@ function App() {
                     element={
                         <ProtectedRoute requiredRole="landlord">
                             <TenantsPage />
+                        </ProtectedRoute>
+                    }
+                />
+
+                {/* Payments Management - landlord only */}
+                <Route
+                    path="/payments"
+                    element={
+                        <ProtectedRoute requiredRole="landlord">
+                            <PaymentsPage />
                         </ProtectedRoute>
                     }
                 />

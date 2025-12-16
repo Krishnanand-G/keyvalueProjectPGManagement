@@ -72,6 +72,9 @@ function LandlordHome() {
                     <button className="btn-secondary" onClick={() => navigate('/tenants')}>
                         Tenants
                     </button>
+                    <button className="btn-secondary" onClick={() => navigate('/payments')}>
+                        Payments
+                    </button>
                     <button className="btn-secondary" onClick={() => navigate('/complaints')}>
                         Complaints
                     </button>

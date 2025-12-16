@@ -1,8 +1,8 @@
 import express from 'express';
 import { db } from '../config/db.js';
-import { payments } from '../db/schema.js';
+import { payments, users, rooms } from '../db/schema.js';
 import { authenticateToken, requireRole } from '../middleware/auth.js';
-import { eq, and, sql } from 'drizzle-orm';
+import { eq, and } from 'drizzle-orm';
 
 const router = express.Router();
 
@@ -57,6 +57,69 @@ router.get('/current-month', authenticateToken, requireRole('tenant'), async (re
     }
 });
 
+// GET /api/payments/all - Get all payments for landlord
+router.get('/all', authenticateToken, requireRole('landlord'), async (req, res) => {
+    try {
+        const { month } = req.query; // Optional month filter
+
+        let allPayments = await db
+            .select({
+                id: payments.id,
+                userId: payments.userId,
+                month: payments.month,
+                proofUrl: payments.proofUrl,
+                amount: payments.amount,
+                status: payments.status,
+                createdAt: payments.createdAt,
+                tenantName: users.name,
+                tenantUsername: users.username,
+                roomNumber: rooms.roomNumber,
+            })
+            .from(payments)
+            .leftJoin(users, eq(payments.userId, users.id))
+            .leftJoin(rooms, eq(users.roomId, rooms.id));
+
+        if (month) {
+            allPayments = allPayments.filter(p => p.month === month);
+        }
+
+        res.json({ payments: allPayments });
+    } catch (error) {
+        console.error('Get all payments error:', error);
+        res.status(500).json({ error: 'Internal server error' });
+    }
+});
+
+// GET /api/payments/current - Get current month payments (landlord)
+router.get('/current', authenticateToken, requireRole('landlord'), async (req, res) => {
+    try {
+        const currentMonth = new Date().toISOString().slice(0, 7);
+
+        const currentPayments = await db
+            .select({
+                id: payments.id,
+                userId: payments.userId,
+                month: payments.month,
+                proofUrl: payments.proofUrl,
+                amount: payments.amount,
+                status: payments.status,
+                createdAt: payments.createdAt,
+                tenantName: users.name,
+                tenantUsername: users.username,
+                roomNumber: rooms.roomNumber,
+            })
+            .from(payments)
+            .leftJoin(users, eq(payments.userId, users.id))
+            .leftJoin(rooms, eq(users.roomId, rooms.id))
+            .where(eq(payments.month, currentMonth));
+
+        res.json({ payments: currentPayments, month: currentMonth });
+    } catch (error) {
+        console.error('Get current payments error:', error);
+        res.status(500).json({ error: 'Internal server error' });
+    }
+});
+
 // POST /api/payments - Submit payment proof
 router.post('/', authenticateToken, requireRole('tenant'), async (req, res) => {
     try {
@@ -93,6 +156,32 @@ router.post('/', authenticateToken, requireRole('tenant'), async (req, res) => {
         });
     } catch (error) {
         console.error('Submit payment error:', error);
+        res.status(500).json({ error: 'Internal server error' });
+    }
+});
+
+// PATCH /api/payments/:id/status - Update payment status (landlord)
+router.patch('/:id/status', authenticateToken, requireRole('landlord'), async (req, res) => {
+    try {
+        const { id } = req.params;
+        const { status } = req.body;
+
+        if (!['submitted', 'approved', 'rejected'].includes(status)) {
+            return res.status(400).json({ error: 'Invalid status' });
+        }
+
+        const [updatedPayment] = await db
+            .update(payments)
+            .set({ status })
+            .where(eq(payments.id, id))
+            .returning();
+
+        res.json({
+            message: 'Payment status updated',
+            payment: updatedPayment,
+        });
+    } catch (error) {
+        console.error('Update payment status error:', error);
         res.status(500).json({ error: 'Internal server error' });
     }
 });
